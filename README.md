@@ -7,17 +7,22 @@ The metadata parameters are parsed and structured as a Python dictionary for eas
 * Extract metadata text
 
 # Usage
-
+Below is sample usage with Sentinel-1 metadata.
 ```py
+from pybeamdimap import BeamDimap
+
 dim_file = 'Sentinel1_SLC.dim'
 dimap = BeamDimap(dim_file)
 
 # Get 11th item in the processing history
 dimap.get_processing_history(11)
 # {'node': 'node.11', 'operator': 'Multilook', 'parameters': {'nAzLooks': '2', 'nRgLooks': '6', 'outputIntensity': 'false', 'grSquarePixel': 'true'}}
+dimap.get_processing_history(11)['parameters']['nAzLooks']
+# '2'
 
 # Get mission
 dimap.get_abstracted_metadata('MISSION')
 # {'@name': 'MISSION', '@desc': 'Satellite mission', '@unit': '', '@type': 'ascii', '@mode': 'rw', '#text': 'SENTINEL-1B'}
-
+dimap.get_abstracted_metadata('MISSION')['#text']
+# 'SENTINEL-1B
 ```

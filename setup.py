@@ -9,7 +9,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'xmltodict'
+        'xmltodict',
+        'pytest'
     ],
     classifiers=[
         "Intended Audience :: Science/Research",
