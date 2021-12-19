@@ -1,7 +1,4 @@
-import json
 import os
-import subprocess
-import sys
 
 import pytest
 
@@ -13,8 +10,6 @@ TESTS_DIR = os.path.abspath('tests')
 
 TEST_DIR = os.path.abspath('tests')
 data1 = os.path.join(TEST_DIR, 'S1_coherance.dim')
-# data2 = os.path.join(TEST_DIR, 'S1_DInSARStack_20190902_20190914.dim')
-# data3 = os.path.join(TEST_DIR, 'S2_ndwi.dim')
 
 
 def assert_error(expected, actual):
