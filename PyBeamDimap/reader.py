@@ -1,3 +1,5 @@
+from typing import Union
+
 import xmltodict
 
 
@@ -22,36 +24,88 @@ class BeamDimap:
         # Load important metadata
         self.metadata_format = self.metadata['Dimap_Document']['Metadata_Id']['METADATA_FORMAT']['#text']
         self.metadata_version = self.metadata['Dimap_Document']['Metadata_Id']['METADATA_FORMAT']['@version']
-        self.product_description = self.get_abstracted_metadata_attribute('SPH_DESCRIPTOR').text
-        self.mission = self.get_abstracted_metadata_attribute('MISSION').text
+        self.product_description = self.get_abstracted_metadata_attribute('SPH_DESCRIPTOR')
+        self.mission = self.get_abstracted_metadata_attribute('MISSION')
         self.dataset_name = self.metadata['Dimap_Document']['Dataset_Id']['DATASET_NAME']
         self.crs = self.metadata['Dimap_Document']['Coordinate_Reference_System']['WKT']
 
     def get_abstracted_metadata_attribute(self, name: str):
+        """
+        Load abstracted metadata section of the BEAM-DIMAP file. This data contains data that is usually related to the
+        scene such as scan time, pass direction, and more.
+
+        :param name: Name of the attribute to load
+        :return: Object containing attribute information
+        """
         for i, elem in enumerate(self._abstracted_metadata):
             if elem['@name'] == name:
-                return _DictToClassObject(dict(self._abstracted_metadata[i]), 'AbstractedMetadata')
-        return
+                metadata = _XmlElement(dict(self._abstracted_metadata[i]), 'AbstractedMetadata')
 
-    def get_band_info(self, band_index=None):
+                # In some cases it may not return a string type because there is additional nested data
+                if not isinstance(metadata, str):
+                    return metadata.text
+                else:
+                    return metadata
 
+        raise ValueError(f'Attribute "{name}" not found in abstracted metadata!')
+
+    def get_band_info(self, band_index=None, attribute=None):
+        """
+        Load metadata that is specific for loading band-specific data such as wavelength, band name, dimensions, and
+        more.
+
+        :param band_index: Load specific band using its band index. Default value None will load all bands
+        :param attribute: Name of specific attribute to load. If None then it will load all attributes for the band.
+        :return: Dict containing band specific information
+        """
         band_count = len(self._band_info) - 1
 
         # Load all bands by default
         if band_index is None:
-            return self._band_info
+            if attribute is None:
+                return self._band_info
+            else:
+                target_elem = {}
+                for item in self._band_info:
+                    target_elem[item['BAND_INDEX']] = item[attribute]
+                return target_elem
+        # Load specific band
         else:
             if band_index > band_count:
                 raise IndexError(
                     f'User inputted band index "{band_index}" is greater than maximum index "{band_count}"')
-            return self._band_info[band_index]
-            # return _DictKeyToClassObject(self._band_info[band_index])
+            if attribute is None:
+                return self._band_info[band_index]
+            else:
+                return self._band_info[band_index][attribute]
 
-    def get_processing_history(self, node_index=None):
+    def get_processing_history(self, node_index=None, attribute=None):
+        """
+        Access processing history metadata. When you process data in SNAP the software saves the operator, parameters,
+        source data, and other relevant information. These data are saved in a list like object caleld a "node".
+        They can be accessed by the processing order of the BEAM-DIMAP file. This method allows you to read specific
+        operators and parameters used in your previous workflows.
+
+        :param node_index: Index location of specific processing node. If None, then return entire processing
+            history.
+        :param attribute: Name of specific attribute to load. If None then it will load all attributes for the node.
+        :return: List or dict object containing operator and parameter information
+        """
         if node_index is None:
-            return self._processing_history
+            if attribute is None:
+                return self._processing_history
+            else:
+                target_elem = {}
+                for item in self._processing_history:
+                    target_elem[item['node']] = item[attribute]
+                return target_elem
         else:
-            return _DictToClassObject(self._processing_history[node_index], section='processing')
+            if attribute is None:
+                # Get all class objects in dictionary format
+                cls_dict = vars(_XmlElement(self._processing_history[node_index], section='processing'))['_elements']
+                return cls_dict
+            else:
+                return _XmlElement(self._processing_history[node_index], section='processing')[attribute]
 
     def _load_image_interpretation(self):
         """
@@ -102,8 +156,8 @@ class BeamDimap:
         return self.metadata['Dimap_Document']['Dataset_Sources']['MDElem']['MDElem'][0]['MDATTR']
 
     # TODO: Finish original metadata section
-    def load_original_metadata(self):
-        return
+    # def get_original_metadata(self):
+    #     return
 
     def _load_processing_history(self):
         """
@@ -150,31 +204,47 @@ class BeamDimap:
 
             history_dict = {
                 'node': elem['@name'],
-                 'operator': elem['MDATTR'][1]['#text'],
-                 'purpose': elem['MDATTR'][4]['#text'],
-                 'processingTime': processing_time,
-                 'sources': sources,
-                 'parameters': parameters
+                'operator': elem['MDATTR'][1]['#text'],
+                'moduleName': elem['MDATTR'][2]['#text'],
+                'moduleVersion': elem['MDATTR'][3]['#text'],
+                'purpose': elem['MDATTR'][4]['#text'],
+                'authors': elem['MDATTR'][5]['#text'],
+                'version': elem['MDATTR'][6]['#text'],
+                'copyright': elem['MDATTR'][7]['#text'],
+                'processingTime': processing_time,
+                'sources': sources,
+                'parameters': parameters
             }
 
             history.append(history_dict)
         return history
 
 
-class _DictToClassObject:
+class _XmlElement:
 
     def __init__(self, node: dict, section: str):
         """
         Dynamically create class based on dictionary object
         :param node: Dictionary containing node data
         """
+
+        self._elements = {}
         for key, value in node.items():
             if section == 'processing':
                 pass
             if section == 'AbstractedMetadata':
                 key = key[1:]
-            setattr(_DictToClassObject, key, value)
+            self._elements[key] = value
+            setattr(_XmlElement, key, value)
+
+    def __getitem__(self, item):
+        if item not in self._elements.keys():
+            raise ValueError(f'Attribute "{item}" does not exist in this section.')
+        return self._elements[item]
 
 
 if __name__ == '__main__':
+    dimap = BeamDimap(r'C:\Users\Angelo\Documents\PANJI\Projects\beam-dimap-reader\tests\S1_coherance.dim')
+    print(dimap.get_processing_history(None, 'operator'))
+    print(dimap.get_band_info(None, 'BAND_NAME'))
     pass
