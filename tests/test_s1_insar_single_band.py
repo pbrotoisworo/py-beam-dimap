@@ -52,43 +52,48 @@ def test_data1_important_metadata(dimap):
 
 def test_data1_band_info(dimap):
 
-
-    actual = dimap.get_band_info(0)['BAND_RASTER_WIDTH']
+    actual = dimap.get_band_info(0, 'BAND_RASTER_WIDTH')
     expected = '2522'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0)['BAND_RASTER_WIDTH']
+    actual = dimap.get_band_info(0, 'BAND_RASTER_WIDTH')
     expected = '2522'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0)['BAND_RASTER_HEIGHT']
+    actual = dimap.get_band_info(0, 'BAND_RASTER_HEIGHT')
     expected = '1125'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0)['DATA_TYPE']
+    actual = dimap.get_band_info(0, 'DATA_TYPE')
     expected = 'float32'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0)['NO_DATA_VALUE_USED']
+    actual = dimap.get_band_info(0, 'NO_DATA_VALUE_USED')
     expected = 'true'
+    assert actual == expected, assert_error(expected, actual)
+
+
+def test_data1_load_all_band_names(dimap):
+    actual = dimap.get_band_info(None, 'BAND_NAME')
+    expected = {'0': 'coh_IW2_VV_09Aug2019_02Sep2019'}
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_data1_abstracted_metadata(dimap):
 
-    actual = dimap.get_abstracted_metadata_attribute('SWATH').text
+    actual = dimap.get_abstracted_metadata_attribute('SWATH')
     expected = 'IW2'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('PRODUCT').text
+    actual = dimap.get_abstracted_metadata_attribute('PRODUCT')
     expected = 'S1B_IW_SLC__1SDV_20190809T075740_20190809T075807_017506_020EC0_4DA0'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('incidence_near').text
+    actual = dimap.get_abstracted_metadata_attribute('incidence_near')
     expected = '35.995479583740234'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('centre_lat').text
+    actual = dimap.get_abstracted_metadata_attribute('centre_lat')
     expected = '64.27266071634527'
     assert actual == expected, assert_error(expected, actual)
 
@@ -101,28 +106,51 @@ def test_data1_get_invalid_band(dimap):
     dimap.get_band_info(1)
 
 
-def test_data1_processing_graph(dimap):
+def test_data1_processing_graph_with_attributes(dimap):
 
-    actual = dimap.get_processing_history(0).operator
+    actual = dimap.get_processing_history(0, 'operator')
     expected = 'Read'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(0).parameters['copyMetadata']
+    actual = dimap.get_processing_history(0, 'parameters')['copyMetadata']
     expected = 'true'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(11).parameters['nAzLooks']
+    actual = dimap.get_processing_history(11, 'parameters')['nAzLooks']
     expected = '2'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(1).operator
+    actual = dimap.get_processing_history(1, 'operator')
     expected = 'TOPSAR-Split'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(2).sources
+    actual = dimap.get_processing_history(2, 'sources')
     expected = 'product:S1B_IW_SLC__1SDV_20190809T075740_20190809T075807_017506_020EC0_4DA0'
     assert actual['sourceProduct'] == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(1).sources
+    actual = dimap.get_processing_history(1, 'sources')
     expected = 'file:/E:/SAR_Iceland/images/S1B_IW_SLC__1SDV_20190809T075740_20190809T075807_017506_020EC0_4DA0.zip'
     assert actual['sourceProduct'] == expected, assert_error(expected, actual)
+
+
+def test_data1_processing_graph_with_nonetypes(dimap):
+
+    # Get list of operators
+    actual = dimap.get_processing_history(None, 'operator')
+    expected = {'node.0': 'Read', 'node.1': 'TOPSAR-Split', 'node.2': 'Apply-Orbit-File', 'node.3': 'Write',
+                'node.4': 'Back-Geocoding', 'node.5': 'Enhanced-Spectral-Diversity', 'node.6': 'Write',
+                'node.7': 'Read', 'node.8': 'Interferogram', 'node.9': 'TOPSAR-Deburst', 'node.10': 'TopoPhaseRemoval',
+                'node.11': 'Multilook', 'node.12': 'GoldsteinPhaseFiltering', 'node.13': 'Subset', 'node.14': 'Read',
+                'node.15': 'SnaphuImport', 'node.16': 'Terrain-Correction', 'node.17': 'BandMaths'}
+    assert actual == expected, assert_error(expected, actual)
+
+    # Get all items in third node
+    actual = dimap.get_processing_history(2, None)
+    expected = {'node': 'node.2', 'operator': 'Apply-Orbit-File', 'moduleName': 'S1TBX SAR Processing',
+                'moduleVersion': '8.0.3', 'purpose': 'Apply orbit file', 'authors': 'Jun Lu, Luis Veci',
+                'version': '1.0', 'copyright': 'Copyright (C) 2016 by Array Systems Computing Inc.',
+                'processingTime': '2021-07-04T15:27:51.595Z',
+                'sources': {'sourceProduct': 'product:S1B_IW_SLC__1SDV_20190809T075740_20190809T075807_017506_020EC0_4DA0'},
+                'parameters': {'orbitType': 'Sentinel Precise (Auto Download)', 'continueOnFail': 'true', 'polyDegree': '3'}}
+    assert actual == expected, assert_error(expected, actual)
+

@@ -44,59 +44,85 @@ def test_data3_important_metadata(dimap):
 
 def test_data3_band_info(dimap):
 
-    actual = dimap.get_band_info(0)['BAND_RASTER_WIDTH']
+    actual = dimap.get_band_info(0, 'BAND_RASTER_WIDTH')
     expected = '34438'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(1)['BAND_RASTER_WIDTH']
+    actual = dimap.get_band_info(1, 'BAND_RASTER_WIDTH')
     expected = '34438'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0)['BAND_NAME']
+    actual = dimap.get_band_info(0, 'BAND_NAME')
     expected = 'Sigma0_VH'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0)['BAND_DESCRIPTION']
+    actual = dimap.get_band_info(0, 'BAND_DESCRIPTION')
     expected = None
+    assert actual == expected, assert_error(expected, actual)
+
+
+def test_data3_load_all_band_names(dimap):
+    actual = dimap.get_band_info(None, 'BAND_NAME')
+    expected = {'0': 'Sigma0_VH', '1': 'Sigma0_VV'}
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_data3_abstracted_metadata(dimap):
 
-    actual = dimap.get_abstracted_metadata_attribute('Processing_system_identifier').text
+    actual = dimap.get_abstracted_metadata_attribute('Processing_system_identifier')
     expected = 'ESA Sentinel-1 IPF 003.40'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('incidence_near').text
+    actual = dimap.get_abstracted_metadata_attribute('incidence_near')
     expected = '30.738478373493205'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('PASS').text
+    actual = dimap.get_abstracted_metadata_attribute('PASS')
     expected = 'DESCENDING'
     assert actual == expected, assert_error(expected, actual)
 
 
-def test_data3_processing_graph(dimap):
+def test_data3_processing_graph_with_attributes(dimap):
 
-    actual = dimap.get_processing_history(0).operator
+    actual = dimap.get_processing_history(0, 'operator')
     expected = 'Read'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(0).parameters['copyMetadata']
+    actual = dimap.get_processing_history(0, 'parameters')['copyMetadata']
     expected = 'true'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(2).parameters['removeThermalNoise']
+    actual = dimap.get_processing_history(2, 'parameters')['removeThermalNoise']
     expected = 'true'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(3).sources
+    actual = dimap.get_processing_history(3, 'sources')
     expected = 'ThermalNoiseRemoval'
     assert actual['sourceProduct'] == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(4).operator
+    actual = dimap.get_processing_history(4, 'operator')
     expected = 'Calibration'
     assert actual == expected, assert_error(expected, actual)
 
 
+def test_data3_processing_graph_with_nonetypes(dimap):
 
+    # Get list of operators
+    actual = dimap.get_processing_history(None, 'operator')
+    expected = {
+        'node.0': 'Read', 'node.1': 'Apply-Orbit-File', 'node.2': 'ThermalNoiseRemoval',
+        'node.3': 'Remove-GRD-Border-Noise', 'node.4': 'Calibration', 'node.5': 'Terrain-Correction',
+        'node.6': 'Write'
+    }
+    assert actual == expected, assert_error(expected, actual)
+
+    # Get all items in second node
+    actual = dimap.get_processing_history(1, None)
+    expected = {
+        'node': 'node.1', 'operator': 'Apply-Orbit-File', 'moduleName': 'S1TBX SAR Processing',
+        'moduleVersion': '8.0.3', 'purpose': 'Apply orbit file', 'authors': 'Jun Lu, Luis Veci',
+        'version': '1.0', 'copyright': 'Copyright (C) 2016 by Array Systems Computing Inc.',
+        'processingTime': '2021-12-19T19:26:23.536Z',
+        'sources': {'sourceProduct': 'file:/C:/Users/Angelo/Documents/PANJI/Projects/scratch/S1A_IW_GRDH_1SDV_20211218T204347_20211218T204412_041068_04E104_C5CB.zip'},
+        'parameters': {'orbitType': 'Sentinel Precise (Auto Download)', 'continueOnFail': 'true', 'polyDegree': '3'}}
+    assert actual == expected, assert_error(expected, actual)
