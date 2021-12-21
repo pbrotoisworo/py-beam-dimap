@@ -10,9 +10,7 @@ the index where index 0 is the first operation that was done on the file.
 ..  code-block:: python
     :caption: Get fifth item in the processing history
 
-        dimap = BeamDimap('S1A_GRD.dim')
-
-        # Get fifth item in the processing history
+        >> dimap = BeamDimap('S1A.dim')
         >>> history = dimap.get_processing_history(5)
         >>> print(history)
         {'node': 'node.8',
@@ -37,6 +35,7 @@ the index where index 0 is the first operation that was done on the file.
 ..  code-block:: python
     :caption: Get list of operators used
 
+        >>> dimap = BeamDimap('S1A.dim')
         >>> history = dimap.get_processing_history(None, 'operator')
         >>> print(history)
         {'node.0': 'Read',
@@ -63,6 +62,7 @@ Get band metadata
 ..  code-block:: python
     :caption: Getting band names for all available bands
 
+        >>> dimap = BeamDimap('S1A.dim')
         >>> band = dimap.get_band_info(None, 'BAND_NAME')
         >>> print(band)
         {'0': 'Sigma0_VH', '1': 'Sigma0_VV'}
@@ -70,6 +70,7 @@ Get band metadata
 ..  code-block:: python
     :caption: Getting band metadata
 
+        >>> dimap = BeamDimap('S1A.dim')
         >>> band = dimap.get_band_info(1, 'BAND_RASTER_WIDTH')
         >>> print(band)
         '34438'

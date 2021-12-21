@@ -1,13 +1,20 @@
 # py-beam-dimap-reader
-[![Build Status](https://app.travis-ci.com/pbrotoisworo/py-beam-dimap.svg?branch=main)](https://app.travis-ci.com/pbrotoisworo/py-beam-dimap)
+[![Build Status](https://app.travis-ci.com/pbrotoisworo/py-beam-dimap.svg?branch=main)](https://app.travis-ci.com/pbrotoisworo/py-beam-dimap) [![Documentation Status](https://readthedocs.org/projects/py-beam-dimap/badge/?version=latest)](https://py-beam-dimap.readthedocs.io/en/latest/?badge=latest)
 
 
-A Python interface to easily parse and interact with the BEAM-DIMAP XML file which is used as part of SNAP software for Sentinel satellites.
 
-The metadata parameters are parsed and structured as a Python dictionary for easier navigation. 
+A Python interface to easily parse and interact with the BEAM-DIMAP XML file which is used as part of SNAP software for
+Sentinel satellites. The metadata parameters are parsed and structured as a Python dictionary for easier navigation.
+
+Visit the [ReadTheDocs page](https://py-beam-dimap.readthedocs.io/en/latest/index.html) for more information on how to 
+use this software. 
+
 # Features
 * Extract processing history including operator used and the parameters used
 * Extract metadata attributes
+
+# Installation
+In the project root type `pip install .` to run the `setup.py` file.
 
 # Usage
 Below is sample usage with Sentinel-1 metadata.
