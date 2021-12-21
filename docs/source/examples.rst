@@ -10,10 +10,10 @@ the index where index 0 is the first operation that was done on the file.
 ..  code-block:: python
     :caption: Get fifth item in the processing history
 
-        >> dimap = BeamDimap('S1A.dim')
+        >>> dimap = BeamDimap('S1A.dim')
         >>> history = dimap.get_processing_history(5)
         >>> print(history)
-        {'node': 'node.8',
+        {'node': 'node.5',
         'operator': 'Interferogram',
         'moduleName': 'S1TBX InSAR Tools',
         'moduleVersion': '8.0.3',
