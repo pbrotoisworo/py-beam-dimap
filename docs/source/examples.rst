@@ -10,7 +10,7 @@ the index where index 0 is the first operation that was done on the file.
 ..  code-block:: python
     :caption: Get fifth item in the processing history
 
-        >>> from PyBeamDimap.mission import Sentinel1
+        >>> from PyBeamDimap.missions import Sentinel1
         >>> dimap = Sentinel1('S1A.dim', 'SLC')
         >>> history = dimap.get_processing_history(5)
         >>> print(history)
@@ -38,7 +38,7 @@ Get list of bands
 ..  code-block:: python
     :caption: Get list of operators used
 
-        >>> from PyBeamDimap.mission import Sentinel2
+        >>> from PyBeamDimap.missions import Sentinel2
         >>> dimap = Sentinel2('S2A.dim', '2A')
         >>> bands = dimap.get_band_info(None, 'BAND_NAME')
         >>> print(bands)
@@ -61,7 +61,7 @@ Get band metadata
 ..  code-block:: python
     :caption: Getting band metadata
 
-        >>> from PyBeamDimap.mission import Sentinel1
+        >>> from PyBeamDimap.missions import Sentinel1
         >>> dimap = Sentinel1('S1A.dim')
         >>> band = dimap.get_band_info(1, 'BAND_RASTER_WIDTH')
         >>> print(band)
