@@ -10,67 +10,59 @@ the index where index 0 is the first operation that was done on the file.
 ..  code-block:: python
     :caption: Get fifth item in the processing history
 
-        >>> dimap = BeamDimap('S1A.dim')
+        >>> from PyBeamDimap.mission import Sentinel1
+        >>> dimap = Sentinel1('S1A.dim', 'SLC')
         >>> history = dimap.get_processing_history(5)
         >>> print(history)
         {'node': 'node.5',
-        'operator': 'Interferogram',
-        'moduleName': 'S1TBX InSAR Tools',
-        'moduleVersion': '8.0.3',
-        'purpose': 'Compute interferograms from stack of coregistered S-1 images',
-        'authors': 'Petar Marinkovic, Jun Lu',
-        'version': '1.0',
-        'copyright': '2021-07-04T15:29:40.799Z',
-        'processingTime': None,
-        'sources': {'sourceProduct': 'file:/E:/SAR_Iceland/20190809_20190902_Orb_Stack.dim'},
-        'parameters':
-            {'subtractTopographicPhase': 'false', 'cohWinAz': '2', 'includeCoherence': 'true',
-            'srpPolynomialDegree': '5', 'srpNumberPoints': '501', 'cohWinRg': '10',
-            'outputElevation': 'false', 'outputLatLon': 'false', 'orbitDegree': '3',
-            'squarePixel': 'true', 'subtractFlatEarthPhase': 'true',
-            'tileExtensionPercent': '100', 'externalDEMApplyEGM': 'false',
-            'demName': 'SRTM 1Sec HGT', 'externalDEMNoDataValue': '0.0'}
+         'operator': 'Interferogram',
+         'moduleName': 'S1TBX InSAR Tools',
+         'moduleVersion': '8.0.3',
+         'purpose': 'Compute interferograms from stack of coregistered S-1 images',
+         'authors': 'Petar Marinkovic, Jun Lu',
+         'version': '1.0',
+         'copyright': '2021-07-04T15:29:40.799Z',
+         'processingTime': None,
+         'sources': {'sourceProduct': 'file:/E:/SAR_Iceland/20190809_20190902_Orb_Stack.dim'},
+         'parameters':
+             {'subtractTopographicPhase': 'false', 'cohWinAz': '2', 'includeCoherence': 'true',
+             'srpPolynomialDegree': '5', 'srpNumberPoints': '501', 'cohWinRg': '10',
+             'outputElevation': 'false', 'outputLatLon': 'false', 'orbitDegree': '3',
+             'squarePixel': 'true', 'subtractFlatEarthPhase': 'true',
+             'tileExtensionPercent': '100', 'externalDEMApplyEGM': 'false',
+             'demName': 'SRTM 1Sec HGT', 'externalDEMNoDataValue': '0.0'}
         }
 
+Get list of bands
+*****************
 ..  code-block:: python
     :caption: Get list of operators used
 
-        >>> dimap = BeamDimap('S1A.dim')
-        >>> history = dimap.get_processing_history(None, 'operator')
-        >>> print(history)
-        {'node.0': 'Read',
-        'node.1': 'TOPSAR-Split',
-        'node.2': 'Apply-Orbit-File',
-        'node.3': 'Write',
-        'node.4': 'Back-Geocoding',
-        'node.5': 'Enhanced-Spectral-Diversity',
-        'node.6': 'Write',
-        'node.7': 'Read',
-        'node.8': 'Interferogram',
-        'node.9': 'TOPSAR-Deburst',
-        'node.10': 'TopoPhaseRemoval',
-        'node.11': 'Multilook',
-        'node.12': 'GoldsteinPhaseFiltering',
-        'node.13': 'Subset', 'node.14': 'Read',
-        'node.15': 'SnaphuImport',
-        'node.16': 'Terrain-Correction',
-        'node.17': 'BandMaths'
+        >>> from PyBeamDimap.mission import Sentinel2
+        >>> dimap = Sentinel2('S2A.dim', '2A')
+        >>> bands = dimap.get_band_info(None, 'BAND_NAME')
+        >>> print(bands)
+        {
+        '0': 'B1', '1': 'B2', '2': 'B3', '3': 'B4', '4': 'B5', '5': 'B6', '6': 'B7', '7': 'B8', '8': 'B8A', '9': 'B9',
+        '10': 'B11', '11': 'B12', '12': 'quality_aot', '13': 'quality_wvp', '14': 'quality_cloud_confidence',
+        '15': 'quality_snow_confidence', '16': 'quality_scene_classification', '17': 'view_zenith_mean',
+        '18': 'view_azimuth_mean', '19': 'sun_zenith', '20': 'sun_azimuth', '21': 'view_zenith_B1',
+        '22': 'view_azimuth_B1', '23': 'view_zenith_B2', '24': 'view_azimuth_B2', '25': 'view_zenith_B3',
+        '26': 'view_azimuth_B3', '27': 'view_zenith_B4', '28': 'view_azimuth_B4', '29': 'view_zenith_B5',
+        '30': 'view_azimuth_B5', '31': 'view_zenith_B6', '32': 'view_azimuth_B6', '33': 'view_zenith_B7',
+        '34': 'view_azimuth_B7', '35': 'view_zenith_B8', '36': 'view_azimuth_B8', '37': 'view_zenith_B8A',
+        '38': 'view_azimuth_B8A', '39': 'view_zenith_B9', '40': 'view_azimuth_B9', '41': 'view_zenith_B10',
+        '42': 'view_azimuth_B10', '43': 'view_zenith_B11', '44': 'view_azimuth_B11', '45': 'view_zenith_B12',
+        '46': 'view_azimuth_B12'
         }
 
 Get band metadata
 ******************
 ..  code-block:: python
-    :caption: Getting band names for all available bands
-
-        >>> dimap = BeamDimap('S1A.dim')
-        >>> band = dimap.get_band_info(None, 'BAND_NAME')
-        >>> print(band)
-        {'0': 'Sigma0_VH', '1': 'Sigma0_VV'}
-
-..  code-block:: python
     :caption: Getting band metadata
 
-        >>> dimap = BeamDimap('S1A.dim')
+        >>> from PyBeamDimap.mission import Sentinel1
+        >>> dimap = Sentinel1('S1A.dim')
         >>> band = dimap.get_band_info(1, 'BAND_RASTER_WIDTH')
         >>> print(band)
         '34438'

@@ -5,3 +5,4 @@ PyBeamDimap
    :maxdepth: 4
 
    reader
+   missions

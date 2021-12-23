@@ -19,16 +19,16 @@ In the project root type `pip install .` to run the `setup.py` file.
 # Usage
 Below is sample usage with Sentinel-1 metadata.
 ```py
-from pybeamdimap import BeamDimap
+from PyBeamDimap.missions import Sentinel1
 
 dim_file = 'Sentinel1_SLC.dim'
-dimap = BeamDimap(dim_file)
+dimap = Sentinel1(dim_file)
 
 # Look at 11th item in the processing history
 dimap.get_processing_history(11, 'operator')  # Multilook
 dimap.get_processing_history(11, 'parameters')['nAzLooks']  # 2
 
 # Get mission
-dimap.get_abstracted_metadata('MISSION')
+dimap.get_abstracted_metadata('MISSION')['text']
 # 'SENTINEL-1B
 ```
