@@ -2,7 +2,8 @@ import os
 
 import pytest
 
-from PyBeamDimap.reader import BeamDimap
+# from PyBeamDimap.reader import BeamDimap
+from PyBeamDimap.missions import Sentinel1
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STSA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'py-beam-dimap')
@@ -26,7 +27,7 @@ def dimap():
     Load an instance of BEAM-DIMAP reader with single band SLC data
     """
     # Setup testing environment
-    yield BeamDimap(metadata=data1)
+    yield Sentinel1(metadata=data1, product='SLC')
 
 
 def test_data1_important_metadata(dimap):
@@ -39,9 +40,6 @@ def test_data1_important_metadata(dimap):
 
     expected = '2.12.1'
     assert dimap.metadata_version == expected, assert_error(expected, dimap.metadata_version)
-
-    expected = 'Sentinel-1 IW Level-1 SLC Product'
-    assert dimap.product_description == expected, assert_error(expected, dimap.product_description)
 
     expected = 'SENTINEL-1B'
     assert dimap.mission == expected, assert_error(expected, dimap.mission)
@@ -81,19 +79,19 @@ def test_data1_load_all_band_names(dimap):
 
 def test_data1_abstracted_metadata(dimap):
 
-    actual = dimap.get_abstracted_metadata_attribute('SWATH')
+    actual = dimap.get_abstracted_metadata_attribute('SWATH')['text']
     expected = 'IW2'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('PRODUCT')
+    actual = dimap.get_abstracted_metadata_attribute('PRODUCT')['text']
     expected = 'S1B_IW_SLC__1SDV_20190809T075740_20190809T075807_017506_020EC0_4DA0'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('incidence_near')
+    actual = dimap.get_abstracted_metadata_attribute('incidence_near')['text']
     expected = '35.995479583740234'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('centre_lat')
+    actual = dimap.get_abstracted_metadata_attribute('centre_lat')['text']
     expected = '64.27266071634527'
     assert actual == expected, assert_error(expected, actual)
 
@@ -146,9 +144,10 @@ def test_data1_processing_graph_with_nonetypes(dimap):
 
     # Get all items in third node
     actual = dimap.get_processing_history(2, None)
-    expected = {'node': 'node.2', 'operator': 'Apply-Orbit-File', 'moduleName': 'S1TBX SAR Processing',
-                'moduleVersion': '8.0.3', 'purpose': 'Apply orbit file', 'authors': 'Jun Lu, Luis Veci',
-                'version': '1.0', 'copyright': 'Copyright (C) 2016 by Array Systems Computing Inc.',
+    expected = {'node': 'node.2', 'id': 'Apply-Orbit-File (Initial)', 'operator': 'Apply-Orbit-File',
+                'moduleName': 'S1TBX SAR Processing', 'moduleVersion': '8.0.3', 'purpose': 'Apply orbit file',
+                'authors': 'Jun Lu, Luis Veci', 'version': '1.0',
+                'copyright': 'Copyright (C) 2016 by Array Systems Computing Inc.',
                 'processingTime': '2021-07-04T15:27:51.595Z',
                 'sources': {'sourceProduct': 'product:S1B_IW_SLC__1SDV_20190809T075740_20190809T075807_017506_020EC0_4DA0'},
                 'parameters': {'orbitType': 'Sentinel Precise (Auto Download)', 'continueOnFail': 'true', 'polyDegree': '3'}}
