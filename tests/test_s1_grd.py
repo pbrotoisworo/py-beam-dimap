@@ -2,7 +2,8 @@ import os
 
 import pytest
 
-from PyBeamDimap.reader import BeamDimap
+# from PyBeamDimap.reader import BeamDimap
+from PyBeamDimap.missions import Sentinel1
 
 TEST_DIR = os.path.abspath('tests')
 data3 = os.path.join(TEST_DIR, 'S1_GRDH_Orb_NR_Cal_TC.dim')
@@ -18,7 +19,7 @@ def dimap():
     Load an instance of BEAM-DIMAP reader with single band SLC data
     """
     # Setup testing environment
-    yield BeamDimap(metadata=data3)
+    yield Sentinel1(metadata=data3, product='GRD')
 
 
 def test_data3_important_metadata(dimap):
@@ -31,9 +32,6 @@ def test_data3_important_metadata(dimap):
 
     expected = '2.12.1'
     assert dimap.metadata_version == expected, assert_error(expected, dimap.metadata_version)
-
-    expected = 'Sentinel-1 IW Level-1 GRD Product'
-    assert dimap.product_description == expected, assert_error(expected, dimap.product_description)
 
     expected = 'SENTINEL-1A'
     assert dimap.mission == expected, assert_error(expected, dimap.mission)
@@ -69,15 +67,19 @@ def test_data3_load_all_band_names(dimap):
 
 def test_data3_abstracted_metadata(dimap):
 
-    actual = dimap.get_abstracted_metadata_attribute('Processing_system_identifier')
+    actual = dimap.get_abstracted_metadata_attribute('Processing_system_identifier')['text']
     expected = 'ESA Sentinel-1 IPF 003.40'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('incidence_near')
+    actual = dimap.get_abstracted_metadata_attribute('Processing_system_identifier')['desc']
+    expected = 'Processing system identifier'
+    assert actual == expected, assert_error(expected, actual)
+
+    actual = dimap.get_abstracted_metadata_attribute('incidence_near')['text']
     expected = '30.738478373493205'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('PASS')
+    actual = dimap.get_abstracted_metadata_attribute('PASS')['text']
     expected = 'DESCENDING'
     assert actual == expected, assert_error(expected, actual)
 
@@ -96,9 +98,9 @@ def test_data3_processing_graph_with_attributes(dimap):
     expected = 'true'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(3, 'sources')
+    actual = dimap.get_processing_history(3, 'sources')['sourceProduct']
     expected = 'ThermalNoiseRemoval'
-    assert actual['sourceProduct'] == expected, assert_error(expected, actual)
+    assert actual == expected, assert_error(expected, actual)
 
     actual = dimap.get_processing_history(4, 'operator')
     expected = 'Calibration'
@@ -119,10 +121,17 @@ def test_data3_processing_graph_with_nonetypes(dimap):
     # Get all items in second node
     actual = dimap.get_processing_history(1, None)
     expected = {
-        'node': 'node.1', 'operator': 'Apply-Orbit-File', 'moduleName': 'S1TBX SAR Processing',
-        'moduleVersion': '8.0.3', 'purpose': 'Apply orbit file', 'authors': 'Jun Lu, Luis Veci',
-        'version': '1.0', 'copyright': 'Copyright (C) 2016 by Array Systems Computing Inc.',
+        'node': 'node.1',
+        'id': 'Apply-Orbit-File',
+        'operator': 'Apply-Orbit-File',
+        'moduleName': 'S1TBX SAR Processing',
+        'moduleVersion': '8.0.3',
+        'purpose': 'Apply orbit file',
+        'authors': 'Jun Lu, Luis Veci',
+        'version': '1.0',
+        'copyright': 'Copyright (C) 2016 by Array Systems Computing Inc.',
         'processingTime': '2021-12-19T19:26:23.536Z',
         'sources': {'sourceProduct': 'file:/C:/Users/Angelo/Documents/PANJI/Projects/scratch/S1A_IW_GRDH_1SDV_20211218T204347_20211218T204412_041068_04E104_C5CB.zip'},
         'parameters': {'orbitType': 'Sentinel Precise (Auto Download)', 'continueOnFail': 'true', 'polyDegree': '3'}}
+
     assert actual == expected, assert_error(expected, actual)
