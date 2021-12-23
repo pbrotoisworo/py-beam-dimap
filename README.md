@@ -22,7 +22,7 @@ Below is sample usage with Sentinel-1 metadata.
 from PyBeamDimap.missions import Sentinel1
 
 dim_file = 'Sentinel1_SLC.dim'
-dimap = Sentinel1(dim_file)
+dimap = Sentinel1(dim_file, 'SLC')
 
 # Look at 11th item in the processing history
 dimap.get_processing_history(11, 'operator')  # Multilook
