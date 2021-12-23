@@ -34,7 +34,7 @@ class BeamDimap:
 
     def _load_image_interpretation(self):
         bands = self.metadata.findall('.//Image_Interpretation/Spectral_Band_Info')
-        bands_children = [x.getchildren() for x in bands]
+        bands_children = [list(x) for x in bands]
         bands_list = []
         for child in bands_children:
             bands_dict = {}
@@ -87,7 +87,7 @@ class BeamDimap:
         for idx, child in enumerate(self.metadata.findall(".//MDElem[@name='Processing_Graph']/*")):
             node_data = {'node': f'node.{idx}'}
             # Loop through elements in each node
-            for grandchild in child.getchildren():
+            for grandchild in list(child):
                 if grandchild.text is not None:
                     if grandchild.text.rstrip():
                         node_data[grandchild.attrib['name']] = grandchild.text.rstrip()
