@@ -30,5 +30,5 @@ dimap.get_processing_history(11, 'parameters')['nAzLooks']  # 2
 
 # Get mission
 dimap.get_abstracted_metadata('MISSION')['text']
-# 'SENTINEL-1B
+# 'SENTINEL-1B'
 ```
