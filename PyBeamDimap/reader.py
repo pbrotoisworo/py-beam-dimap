@@ -1,8 +1,6 @@
 # Reader file handles all functions related to reading and parsing BEAM-DIMAP files
 import xml.etree.ElementTree as ET
 
-import xmltodict
-
 
 class BeamDimap:
 
@@ -15,9 +13,6 @@ class BeamDimap:
         :param metadata: Path of BEAM-DIMAP (.dim) file
         """
         # Load metadata
-        with open(metadata) as f:
-            self.metadata = xmltodict.parse(f.read())
-
         tree = ET.parse(metadata)
         self.metadata = tree.getroot()
 
