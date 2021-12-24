@@ -25,7 +25,14 @@ class BeamDimap:
         self.metadata_format = self.metadata.findall('.//METADATA_FORMAT')[0].text
         self.metadata_version = self.metadata.findall('.//METADATA_FORMAT')[0].attrib['version']
         self.dataset_name = self.metadata.findall('.//DATASET_NAME')[0].text
-        self.crs = self.metadata.findall('.//WKT')[0].text
+        self.crs = self._get_crs()
+
+    def _get_crs(self):
+        crs = self.metadata.findall('.//Coordinate_Reference_System/WKT')
+        if not crs:
+            return None
+        else:
+            return crs[0].text
 
     def _load_image_interpretation(self):
         bands = self.metadata.findall('.//Image_Interpretation/Spectral_Band_Info')
