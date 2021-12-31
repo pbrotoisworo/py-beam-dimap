@@ -1,5 +1,9 @@
 Installation
 ############
 
-Install PyBeamDimap by opening a terminal, navigating to the root folder of the software and typing ``pip install .``
-This will run the ``setup.py`` file.
+Install PyBeamDimap by opening a terminal and typing the command:
+
+``pip install git+https://github.com/pbrotoisworo/py-beam-dimap``
+
+
+This will install PyBeamDimap into your Python environment.

@@ -33,9 +33,9 @@ author = 'Panji Brotoisworo'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc'
+    'sphinx.ext.autodoc',
 ]
-# autodoc_mock_imports = ['xmltodict']
+autodoc_mock_imports = ['pandas']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

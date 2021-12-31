@@ -15,8 +15,8 @@ files used by `SNAP software`_ developed by the European Space Agency.
    :caption: Contents:
 
    Installation
-   examples
-   modules
+   Usage
+   Modules
 
 
 
