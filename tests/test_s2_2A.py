@@ -43,33 +43,33 @@ def test_important_metadata(dimap):
 
 def test_band_info(dimap):
 
-    actual = dimap.get_band_info(0, 'BAND_RASTER_WIDTH')
+    actual = dimap.ImageInterpretation.get_band_info(0, 'BAND_RASTER_WIDTH')
     expected = '1830'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(1, 'BAND_RASTER_WIDTH')
+    actual = dimap.ImageInterpretation.get_band_info(1, 'BAND_RASTER_WIDTH')
     expected = '10980'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(5, 'BAND_DESCRIPTION')
+    actual = dimap.ImageInterpretation.get_band_info(5, 'BAND_DESCRIPTION')
     expected = 'Reflectance in band B6'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(4, 'SCALING_FACTOR')
+    actual = dimap.ImageInterpretation.get_band_info(4, 'SCALING_FACTOR')
     expected = '1.0E-4'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(6, 'BAND_NAME')
+    actual = dimap.ImageInterpretation.get_band_info(6, 'BAND_NAME')
     expected = 'B7'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(6, 'DATA_TYPE')
+    actual = dimap.ImageInterpretation.get_band_info(6, 'DATA_TYPE')
     expected = 'uint16'
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_load_all_band_names(dimap):
-    actual = dimap.get_band_info(None, 'BAND_NAME')
+    actual = dimap.ImageInterpretation.get_band_info(None, 'BAND_NAME')
     expected = {
         '0': 'B1', '1': 'B2', '2': 'B3', '3': 'B4', '4': 'B5', '5': 'B6', '6': 'B7', '7': 'B8', '8': 'B8A', '9': 'B9',
         '10': 'B11', '11': 'B12', '12': 'quality_aot', '13': 'quality_wvp', '14': 'quality_cloud_confidence',
@@ -87,10 +87,10 @@ def test_load_all_band_names(dimap):
 
 def test_processing_graph_with_attributes(dimap):
 
-    actual = dimap.get_processing_history(0, 'operator')
+    actual = dimap.ProcessingGraph.get_processing_graph(0, 'operator')
     expected = 'Land-Sea-Mask'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(0, 'parameters')['landMask']
+    actual = dimap.ProcessingGraph.get_processing_graph(0, 'parameters')['landMask']
     expected = 'false'
     assert actual == expected, assert_error(expected, actual)

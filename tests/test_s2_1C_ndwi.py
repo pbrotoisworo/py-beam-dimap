@@ -43,48 +43,48 @@ def test_important_metadata(dimap):
 
 def test_band_info(dimap):
 
-    actual = dimap.get_band_info(0, 'BAND_RASTER_WIDTH')
+    actual = dimap.ImageInterpretation.get_band_info(0, 'BAND_RASTER_WIDTH')
     expected = '5490'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0, 'BAND_NAME')
+    actual = dimap.ImageInterpretation.get_band_info(0, 'BAND_NAME')
     expected = 'ndwi'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0, 'BAND_DESCRIPTION')
+    actual = dimap.ImageInterpretation.get_band_info(0, 'BAND_DESCRIPTION')
     expected = None
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(1, 'BAND_DESCRIPTION')
+    actual = dimap.ImageInterpretation.get_band_info(1, 'BAND_DESCRIPTION')
     expected = 'ndwi specific flags'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(1, 'IMAGE_TO_MODEL_TRANSFORM')
+    actual = dimap.ImageInterpretation.get_band_info(1, 'IMAGE_TO_MODEL_TRANSFORM')
     expected = '20.0,0.0,0.0,-20.0,199980.0,1700040.0'
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_load_all_band_names(dimap):
-    actual = dimap.get_band_info(None, 'BAND_NAME')
+    actual = dimap.ImageInterpretation.get_band_info(None, 'BAND_NAME')
     expected = {'0': 'ndwi', '1': 'flags'}
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_processing_graph_with_attributes(dimap):
 
-    actual = dimap.get_processing_history(0, 'operator')
+    actual = dimap.ProcessingGraph.get_processing_graph(0, 'operator')
     expected = 'NdwiOp'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(1, 'operator')
+    actual = dimap.ProcessingGraph.get_processing_graph(1, 'operator')
     expected = 'Write'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(0, 'parameters')['upsampling']
+    actual = dimap.ProcessingGraph.get_processing_graph(0, 'parameters')['upsampling']
     expected = 'Nearest'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(1, 'sources')['sourceProduct']
+    actual = dimap.ProcessingGraph.get_processing_graph(1, 'sources')['sourceProduct']
     expected = 'file:/C:/Users/Angelo/Documents/PANJI/Projects/beam-dimap-reader/S2B_MSIL1C_20211203T022049_N0301_R003_T51PTS_20211203T042026_ndwi.dim'
     assert actual == expected, assert_error(expected, actual)
 

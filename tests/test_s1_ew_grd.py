@@ -41,67 +41,63 @@ def test_important_metadata(dimap):
 
 def test_band_info(dimap):
 
-    actual = dimap.get_band_info(0, 'BAND_RASTER_WIDTH')
+    actual = dimap.ImageInterpretation.get_band_info(0, 'BAND_RASTER_WIDTH')
     expected = '10503'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(1, 'BAND_RASTER_WIDTH')
+    actual = dimap.ImageInterpretation.get_band_info(1, 'BAND_RASTER_WIDTH')
     expected = '10503'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0, 'BAND_NAME')
+    actual = dimap.ImageInterpretation.get_band_info(0, 'BAND_NAME')
     expected = 'Sigma0_HH'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_band_info(0, 'BAND_DESCRIPTION')
+    actual = dimap.ImageInterpretation.get_band_info(0, 'BAND_DESCRIPTION')
     expected = None
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_load_all_band_names(dimap):
-    actual = dimap.get_band_info(None, 'BAND_NAME')
+    actual = dimap.ImageInterpretation.get_band_info(None, 'BAND_NAME')
     expected = {'0': 'Sigma0_HH', '1': 'Sigma0_HV'}
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_abstracted_metadata(dimap):
 
-    actual = dimap.get_abstracted_metadata_attribute('Processing_system_identifier')['text']
+    actual = dimap.AbstractedMetadata.get_attribute('Processing_system_identifier')
     expected = 'ESA Sentinel-1 IPF 003.40'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('Processing_system_identifier')['desc']
-    expected = 'Processing system identifier'
-    assert actual == expected, assert_error(expected, actual)
-
-    actual = dimap.get_abstracted_metadata_attribute('incidence_near')['text']
+    actual = dimap.AbstractedMetadata.get_attribute('incidence_near')
     expected = '19.442898709420884'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_abstracted_metadata_attribute('PASS')['text']
+    actual = dimap.AbstractedMetadata.get_attribute('PASS')
     expected = 'DESCENDING'
     assert actual == expected, assert_error(expected, actual)
 
 
 def test_processing_graph_with_attributes(dimap):
 
-    actual = dimap.get_processing_history(0, 'operator')
+    actual = dimap.ProcessingGraph.get_processing_graph(0, 'operator')
     expected = 'Apply-Orbit-File'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(0, 'parameters')['orbitType']
+    actual = dimap.ProcessingGraph.get_processing_graph(0, 'parameters')['orbitType']
     expected = 'Sentinel Precise (Auto Download)'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(2, 'parameters')['file']
+    actual = dimap.ProcessingGraph.get_processing_graph(2, 'parameters')['file']
     expected = r'C:\Users\Angelo\Documents\PANJI\Projects\beam-dimap-reader\S1A_EW_GRDM_1SDH_20211221T075032_20211221T075104_041104_04E228_CED1_Orb.dim'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(3, 'sources')['sourceProduct']
+    actual = dimap.ProcessingGraph.get_processing_graph(3, 'sources')['sourceProduct']
     expected = 'file:/C:/Users/Angelo/Documents/PANJI/Projects/beam-dimap-reader/S1A_EW_GRDM_1SDH_20211221T075032_20211221T075104_041104_04E228_CED1_Orb.dim'
     assert actual == expected, assert_error(expected, actual)
 
-    actual = dimap.get_processing_history(4, 'operator')
+    actual = dimap.ProcessingGraph.get_processing_graph(4, 'operator')
     expected = 'Write'
     assert actual == expected, assert_error(expected, actual)
 
@@ -109,7 +105,7 @@ def test_processing_graph_with_attributes(dimap):
 def testprocessing_graph_with_nonetypes(dimap):
 
     # Get list of operators
-    actual = dimap.get_processing_history(None, 'operator')
+    actual = dimap.ProcessingGraph.get_processing_graph(None, 'operator')
     expected = {
         'node.0': 'Apply-Orbit-File',
         'node.1': 'Write',
@@ -122,7 +118,7 @@ def testprocessing_graph_with_nonetypes(dimap):
     assert actual == expected, assert_error(expected, actual)
 
     # Get all items in second node
-    actual = dimap.get_processing_history(1, None)
+    actual = dimap.ProcessingGraph.get_processing_graph(1, None)
     expected = {
         'node': 'node.1',
         'id': 'Write$17DEB67E923',

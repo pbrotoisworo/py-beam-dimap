@@ -14,9 +14,10 @@ files used by `SNAP software`_ developed by the European Space Agency.
    :maxdepth: 2
    :caption: Contents:
 
+   dimap_sections
    Installation
-   examples
-   modules
+   Usage
+   Modules
 
 
 

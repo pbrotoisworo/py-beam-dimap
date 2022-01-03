@@ -10,25 +10,22 @@ Visit the [ReadTheDocs page](https://py-beam-dimap.readthedocs.io/en/latest/inde
 use this software. 
 
 # Features
-* Extract processing history including operator used and the parameters used
-* Extract metadata attributes
+* Quickly and easily navigate the BEAM-DIMAP metadata for Sentinel satellites
+* Metadata sections are available in preprocessed dataframes or dictionary objects
+* Tested against many workflows. If it raises an issue with your particular workflow please raise an issue. 
 
 # Installation
-In the project root type `pip install .` to run the `setup.py` file.
-
-# Usage
-Below is sample usage with Sentinel-1 metadata.
-```py
-from PyBeamDimap.missions import Sentinel1
-
-dim_file = 'Sentinel1_SLC.dim'
-dimap = Sentinel1(dim_file, 'SLC')
-
-# Look at 11th item in the processing history
-dimap.get_processing_history(11, 'operator')  # Multilook
-dimap.get_processing_history(11, 'parameters')['nAzLooks']  # 2
-
-# Get mission
-dimap.get_abstracted_metadata('MISSION')['text']
-# 'SENTINEL-1B'
+Open the terminal and type:
 ```
+pip install git+https://github.com/pbrotoisworo/py-beam-dimap.git
+```
+
+# Contributing
+Contributing can be done by submitting a pull request or even just raising an issue. If you encounter an error
+please let me know.
+
+If you are submitting a pull request, ensure that it passes the tests by installing `pytest` and typing the
+following command from the project root:
+```
+pytest tests
+``` 
