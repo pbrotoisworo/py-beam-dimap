@@ -17,7 +17,7 @@ use this software.
 # Installation
 Open the terminal and type:
 ```
-pip install git+https://github.com/pbrotoisworo/py-beam-dimap
+pip install git+https://github.com/pbrotoisworo/py-beam-dimap.git
 ```
 
 # Contributing
