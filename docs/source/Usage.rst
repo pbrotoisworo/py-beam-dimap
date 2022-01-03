@@ -24,10 +24,6 @@ PyBeamDimap is still in development and as of writing the available sections are
         >>> print(mission)
         'SENTINEL-1B'
 
-
-Usage Examples
-==============
-
 Below are some samples of PyBeamDimap usage.
 
 Get file processing history
@@ -98,7 +94,7 @@ Get band metadata
 Load Sentinel-1 orbit state vectors
 ***********************************
 ..  code-block:: python
-    :caption: Getting band metadata
+    :caption: Getting orbit state vector data
 
         >>> from PyBeamDimap.missions import Sentinel1
 

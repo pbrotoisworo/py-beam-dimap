@@ -8,3 +8,4 @@ Code documentation for PyBeamDimap.
    missions
    core
    abstracted_metadata
+   processing_graph

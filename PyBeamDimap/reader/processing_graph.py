@@ -4,8 +4,13 @@ class ProcessingGraph:
         self._metadata = metadata
         self._product = product
 
-    def get_processing_graph(self, node_index=None, attribute=None):
+    def get_processing_graph(self, node_index=None, operator=None) -> dict:
+        """
+        Load processing history. The `node_index` and `operator` arguments can be used together.
 
+        :param node_index: Load processing history for a specific node
+        :param operator: Load a specific operator
+        """
         # Get parameters
         node_list = []
         # Loop through nodes
@@ -37,19 +42,19 @@ class ProcessingGraph:
             node_list.append(node_data)
 
         if node_index is None:
-            if attribute is None:
+            if operator is None:
                 return node_list
             else:
                 output_dict = {}
                 for node in node_list:
-                    output_dict[node['node']] = node[attribute]
+                    output_dict[node['node']] = node[operator]
                 return output_dict
 
         else:
-            if attribute is None:
+            if operator is None:
                 return node_list[node_index]
             else:
-                return node_list[node_index][attribute]
+                return node_list[node_index][operator]
 
 
 if __name__ == '__main__':

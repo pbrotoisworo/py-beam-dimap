@@ -34,6 +34,7 @@ author = 'Panji Brotoisworo'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel'
 ]
 autodoc_mock_imports = ['pandas']
 
